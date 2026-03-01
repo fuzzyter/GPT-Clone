@@ -1,0 +1,47 @@
+# --- Dependencies ---
+node_modules/
+
+# --- Build / packager (Vite, Electron Builder) ---
+build/
+dist/
+release/
+*.tsbuildinfo
+
+# --- Environment & API secrets (never commit real keys) ---
+.env
+.env.*
+!.env.example
+!.env.sample
+.envrc
+.direnv/
+
+# Plain `env` (no dot) used in course servers / standalone — ignore if it contains real keys
+src/env
+code/**/server/env
+code/7-Standalone_ChatGPT_Clone/env
+
+# --- Keys & credential files ---
+*.pem
+*.key
+*.p12
+*.pfx
+*credentials*.json
+serviceAccount*.json
+.google-creds.json
+
+# --- Logs & local caches ---
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.vite/
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.idea/
+.vscode/*
+!.vscode/extensions.json
