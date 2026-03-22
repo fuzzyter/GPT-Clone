@@ -2,7 +2,7 @@ import React from "react";
 import settingIcon from "../../assets/setting.png";
 import { useHelpOverlayControls } from "./Help/HelpAnchorsContext.jsx";
 
-const TopRightButtons = () => {
+const TopRightButtons = ({ onOpenSettings }) => {
   const { openHelp } = useHelpOverlayControls();
 
   return (
@@ -20,6 +20,7 @@ const TopRightButtons = () => {
       <button
         type="button"
         className="top_right_button settings_button"
+        onClick={onOpenSettings}
         aria-label="Settings"
         title="Settings"
       >

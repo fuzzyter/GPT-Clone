@@ -9,6 +9,9 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+:root {
+  --ui-font-size: 14px; }
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
