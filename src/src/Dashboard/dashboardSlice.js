@@ -68,9 +68,17 @@ const dashboardSlice = createSlice({
         state.conversations = JSON.parse(saved);
       }
     },
-    saveConversations: (state) => {
-      // Save conversations to localStorage
-      localStorage.setItem('conversations', JSON.stringify(state.conversations));
+    toggleBookmark: (state, action) => {
+      const { conversationId, messageId } = action.payload;
+      const conversation = state.conversations.find((c) => c.id === conversationId);
+      if (!conversation || !Array.isArray(conversation.messages)) return;
+
+      const message = conversation.messages.find((m) => m.id === messageId);
+      if (!message) return;
+      
+
+      message.bookmarked = !message.bookmarked;
+      localStorage.setItem("conversations", JSON.stringify(state.conversations));
     },
   },
   extraReducers: (builder) => {
@@ -117,7 +125,7 @@ export const {
   addMessage,
   deleteConversations,
   loadConversations,
-  saveConversations,
+  toggleBookmark,
 } = dashboardSlice.actions;
 
 export default dashboardSlice.reducer;

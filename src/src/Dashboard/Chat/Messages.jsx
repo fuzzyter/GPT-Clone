@@ -23,12 +23,14 @@ const Messages = () => {
 
   return (
     <div ref={helpAnchorRef} className="chat_messages_container">
-      {conversation?.messages.map((m, index) => (
+      {conversation?.messages.map((m) => (
         <Message
           key={m.id}
+          messageId={m.id}
+          conversationId={conversation?.id}
           content={m.content}
           aiMessage={m.aiMessage}
-          animate={index === conversation.messages.length - 1 && m.aiMessage}
+          bookmarked={Boolean(m.bookmarked)}
         />
       ))}
       <div ref={scrollRef} />

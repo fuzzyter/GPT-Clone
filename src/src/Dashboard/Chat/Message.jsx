@@ -1,40 +1,50 @@
-import React, { useState, useRef, useEffect } from "react";
+import React from "react";
+import { useDispatch } from "react-redux";
 import { GrUser } from "react-icons/gr";
 import { FcMindMap } from "react-icons/fc";
+import bookmarkOff from "../../../assets/bookmark_off.png";
+import bookmarkOn from "../../../assets/bookmark_on.png";
+import { toggleBookmark } from "../dashboardSlice";
 
-const SlowText = (props) => {
-  const { speed, text } = props;
+const Message = ({ content, aiMessage, messageId, conversationId, bookmarked }) => {
+  const dispatch = useDispatch();
 
-  const [placeholder, setPlaceholder] = useState(text[0]);
+  const handleToggleBookmark = () => {
+    if (!conversationId || !messageId) return;
+    dispatch(toggleBookmark({ conversationId, messageId }));
+  };
 
-  const index = useRef(0);
-
-  useEffect(() => {
-    function tick() {
-      index.current++;
-      setPlaceholder((prev) => prev + text[index.current]);
-    }
-    if (index.current < text.length - 1) {
-      let addChar = setInterval(tick, speed);
-      return () => clearInterval(addChar);
-    }
-  }, [placeholder, speed, text]);
-
-  return <span>{placeholder}</span>;
-};
-
-const Message = ({ content, aiMessage, animate }) => {
   return (
     <div
+      id={messageId ? `chat-message-${messageId}` : undefined}
       className="message_container"
       style={{ background: aiMessage ? "#ebe5dd" : "#f0ede6" }}
     >
-      <div className="message_avatar_container">
-        {aiMessage ? <FcMindMap /> : <GrUser />}
+      <div className="message">
+        <div className="message_bookmark_slot">
+          <button
+            type="button"
+            className={
+              bookmarked ? "message_bookmark_button is_bookmarked" : "message_bookmark_button"
+            }
+            onClick={handleToggleBookmark}
+            aria-label={bookmarked ? "Remove bookmark" : "Add bookmark"}
+            title={bookmarked ? "Bookmarked" : "Bookmark"}
+          >
+            <img
+              className="message_bookmark_icon"
+              src={bookmarked ? bookmarkOn : bookmarkOff}
+              alt=""
+            />
+          </button>
+        </div>
+        <div className="message_avatar_container">
+          {aiMessage ? <FcMindMap /> : <GrUser />}
+        </div>
+        <p className="message_text">
+          {content}
+        </p>
       </div>
-      <p className="message_text">
-        {animate ? <SlowText speed={20} text={content} /> : content}
-      </p>
     </div>
   );
 };

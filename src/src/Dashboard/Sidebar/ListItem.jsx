@@ -2,11 +2,11 @@ import React from "react";
 import { BsChatLeft } from "react-icons/bs";
 
 const ListItem = (props) => {
-  const { title, handleSetSelectedChat, conversationId } = props;
+  const { title, handleSetSelectedChat, conversationId, isSelected } = props;
 
   return (
     <div
-      className="list_item"
+      className={isSelected ? "list_item list_item_selected" : "list_item"}
       onClick={() => handleSetSelectedChat(conversationId)}
     >
       <div className="list_item_icon">
