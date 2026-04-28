@@ -2,11 +2,9 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { AiOutlineDelete } from "react-icons/ai";
 import { deleteConversations } from "../dashboardSlice";
-import { useHelpAnchorRef } from "../Help/HelpAnchorsContext.jsx";
 
 const DeleteConversationsButton = () => {
   const dispatch = useDispatch();
-  const helpAnchorRef = useHelpAnchorRef("deleteAll");
 
   const handleDeleteConversations = () => {
     // Clear from localStorage
@@ -18,7 +16,6 @@ const DeleteConversationsButton = () => {
 
   return (
     <div
-      ref={helpAnchorRef}
       className="list_item delete_conv_button"
       onClick={handleDeleteConversations}
     >

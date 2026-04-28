@@ -461,26 +461,6 @@
     max-width: none;
 }
 
-.chat_help_anchor_slot {
-    position: absolute;
-    pointer-events: none;
-    opacity: 0;
-}
-
-.chat_help_anchor_messages {
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 200px;
-}
-
-.chat_help_anchor_composer {
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 150px;
-}
-
 .chat_messages_container {
     width:100%;
     flex-grow: 1;
@@ -547,6 +527,7 @@
     color: white;
     display: flex;
     align-items: center;
+    cursor: pointer;
 }
 
 .new_chat_button:hover {
@@ -559,6 +540,7 @@
     transition: 0.1s;
     display: flex;
     align-items: center;
+    cursor: pointer;
 }
 
 .list_item_selected {
@@ -682,6 +664,11 @@
     gap: 8px;
 }
 
+.document_picker_panel_empty {
+    justify-content: center;
+    align-items: center;
+}
+
 .document_picker_card {
     width: 100%;
     border: 1px solid #d3cbbb;
@@ -699,6 +686,14 @@
 .document_picker_card.is_selected {
     border-color: #877a6f;
     background: #f3efe8;
+}
+
+.document_picker_empty_text {
+    margin: 0;
+    color: #9e968e;
+    font-size: 12px;
+    line-height: 1.4;
+    text-align: center;
 }
 
 .document_picker_content {
@@ -839,12 +834,12 @@
 
   .bookmarks_button {
     position: absolute;
-    bottom: 56px;
+    bottom: 42px;
   }
 
   .documents_button {
     position: absolute;
-    bottom: 112px;
+    bottom: 84px;
   }
 
   .bookmarks_button_icon {

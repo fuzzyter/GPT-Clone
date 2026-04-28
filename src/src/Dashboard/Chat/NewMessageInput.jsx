@@ -4,7 +4,6 @@ import { BsSend } from "react-icons/bs";
 import { v4 as uuid } from "uuid";
 import layersIcon from "../../../assets/layers.png";
 import { addMessage, setSelectedConversationId, sendConversationMessage } from "../dashboardSlice";
-import { useHelpAnchorRef } from "../Help/HelpAnchorsContext.jsx";
 
 const NewMessageInput = () => {
   const [content, setContent] = useState("");
@@ -12,7 +11,6 @@ const NewMessageInput = () => {
   const [selectedDocumentIds, setSelectedDocumentIds] = useState([]);
   const [documents, setDocuments] = useState([]);
   const inputWrapRef = useRef(null);
-  const helpAnchorRef = useHelpAnchorRef("composer");
 
   const dispatch = useDispatch();
 
@@ -142,7 +140,7 @@ const NewMessageInput = () => {
   };
 
   return (
-    <div ref={helpAnchorRef} className="new_message_input_container">
+    <div className="new_message_input_container">
       <div
         ref={inputWrapRef}
         className={
@@ -152,27 +150,39 @@ const NewMessageInput = () => {
         }
       >
         {isDocumentPickerOpen ? (
-          <div className="document_picker_panel">
-            {documents.map((item) => (
+          <div
+            className={
+              documents.length === 0
+                ? "document_picker_panel document_picker_panel_empty"
+                : "document_picker_panel"
+            }
+          >
+            {documents.length === 0 ? (
+              <p className="document_picker_empty_text">
+                No documents found. Please add a document first.
+              </p>
+            ) : (
+              documents.map((item) => (
 
-              <button
-                key={item.id}
-                type="button"
+                <button
+                  key={item.id}
+                  type="button"
 
-                className={
-                  selectedDocumentIds.includes(item.id)
-                    ? "document_picker_card is_selected"
-                    : "document_picker_card"
-                }
-                onClick={() => toggleSelectedDocument(item.id)}
-              >
-                <p className="document_picker_content">{item.content}</p>
-                <p className="document_picker_saved_time">
-                  {formatDocumentTime(item.savedAt)}
-                </p>
-              </button>
+                  className={
+                    selectedDocumentIds.includes(item.id)
+                      ? "document_picker_card is_selected"
+                      : "document_picker_card"
+                  }
+                  onClick={() => toggleSelectedDocument(item.id)}
+                >
+                  <p className="document_picker_content">{item.content}</p>
+                  <p className="document_picker_saved_time">
+                    {formatDocumentTime(item.savedAt)}
+                  </p>
+                </button>
 
-            ))}
+              ))
+            )}
           </div>
         ) : null}
         <textarea
@@ -185,7 +195,7 @@ const NewMessageInput = () => {
           disabled={loading}
         />
         <div className="new_message_left_controls">
-          
+
           <button
             type="button"
             className={

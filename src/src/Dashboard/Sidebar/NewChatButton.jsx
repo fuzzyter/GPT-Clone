@@ -1,9 +1,7 @@
 import React from "react";
 import { AiOutlinePlus } from "react-icons/ai";
-import { useHelpAnchorRef } from "../Help/HelpAnchorsContext.jsx";
 
 const NewChatButton = ({ handleSetSelectedChat }) => {
-  const helpAnchorRef = useHelpAnchorRef("newChat");
 
   const handleChooseNewChat = () => {
     handleSetSelectedChat("new");
@@ -11,7 +9,6 @@ const NewChatButton = ({ handleSetSelectedChat }) => {
 
   return (
     <div
-      ref={helpAnchorRef}
       className="new_chat_button"
       onClick={handleChooseNewChat}
     >

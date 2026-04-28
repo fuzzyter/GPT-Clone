@@ -6,13 +6,11 @@ import DocumentsButton from "./DocumentsButton.jsx";
 import DeleteConversationsButton from "./DeleteConversationsButton";
 import { useDispatch, useSelector } from "react-redux";
 import { setSelectedConversationId } from "../dashboardSlice";
-import { useHelpAnchorRef } from "../Help/HelpAnchorsContext.jsx";
 import hambugerIcon from "../../../assets/hambuger.png";
 import searchIcon from "../../../assets/search.png";
 
 const Sidebar = ({ onSelectConversation, onOpenSearch, onOpenBookmarks, onOpenDocuments }) => {
   const dispatch = useDispatch();
-  const conversationsAnchorRef = useHelpAnchorRef("conversations");
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const conversations = useSelector((state) => state.dashboard.conversations);
@@ -60,7 +58,7 @@ const Sidebar = ({ onSelectConversation, onOpenSearch, onOpenBookmarks, onOpenDo
 
       <div className={isCollapsed ? "sidebar_content sidebar_content_hidden" : "sidebar_content"}>
         <NewChatButton handleSetSelectedChat={handleSetSelectedChat} />
-        <div ref={conversationsAnchorRef} className="sidebar_conversations_anchor">
+        <div className="sidebar_conversations_anchor">
 
           {conversations.map((c) => (
             <ListItem

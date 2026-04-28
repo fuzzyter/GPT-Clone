@@ -1,10 +1,8 @@
 import React, { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import Message from "./Message.jsx";
-import { useHelpAnchorRef } from "../Help/HelpAnchorsContext.jsx";
 
 const Messages = () => {
-  const helpAnchorRef = useHelpAnchorRef("messages");
   const { selectedConversationId, conversations } = useSelector(
     (state) => state.dashboard
   );
@@ -22,7 +20,7 @@ const Messages = () => {
   useEffect(scrollToButton, [conversation?.messages]);
 
   return (
-    <div ref={helpAnchorRef} className="chat_messages_container">
+    <div className="chat_messages_container">
       {conversation?.messages.map((m) => (
         <Message
           key={m.id}
