@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { AiOutlinePlus } from "react-icons/ai";
 import Sidebar from "./Sidebar/Sidebar.jsx";
 import Chat from "./Chat/Chat.jsx";
 import { HelpAnchorsProvider } from "./Help/HelpAnchorsContext.jsx";
@@ -16,6 +17,11 @@ const Dashboard = () => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isBookmarksOpen, setIsBookmarksOpen] = useState(false);
+  const [isDocumentsOpen, setIsDocumentsOpen] = useState(false);
+  const [documents, setDocuments] = useState([]);
+  const [isDocumentEditorOpen, setIsDocumentEditorOpen] = useState(false);
+  const [editingDocumentId, setEditingDocumentId] = useState(null);
+  const [documentInput, setDocumentInput] = useState("");
   const [fontSize, setFontSize] = useState(14);
   const minFontSize = 12;
   const maxFontSize = 20;
@@ -28,18 +34,28 @@ const Dashboard = () => {
     setIsSettingsOpen(true);
     setIsSearchOpen(false);
     setIsBookmarksOpen(false);
+    setIsDocumentsOpen(false);
   };
 
   const openSearch = () => {
     setIsSearchOpen(true);
     setIsSettingsOpen(false);
     setIsBookmarksOpen(false);
+    setIsDocumentsOpen(false);
   };
 
   const openBookmarks = () => {
     setIsBookmarksOpen(true);
     setIsSettingsOpen(false);
     setIsSearchOpen(false);
+    setIsDocumentsOpen(false);
+  };
+
+  const openDocuments = () => {
+    setIsDocumentsOpen(true);
+    setIsSettingsOpen(false);
+    setIsSearchOpen(false);
+    setIsBookmarksOpen(false);
   };
 
   const closeSettings = () => {
@@ -52,6 +68,13 @@ const Dashboard = () => {
 
   const closeBookmarks = () => {
     setIsBookmarksOpen(false);
+  };
+
+  const closeDocuments = () => {
+    setIsDocumentsOpen(false);
+    setIsDocumentEditorOpen(false);
+    setEditingDocumentId(null);
+    setDocumentInput("");
   };
 
   const runSearch = () => {
@@ -108,6 +131,9 @@ const Dashboard = () => {
     if (isBookmarksOpen) {
       closeBookmarks();
     }
+    if (isDocumentsOpen) {
+      closeDocuments();
+    }
 
   };
 
@@ -152,9 +178,23 @@ const Dashboard = () => {
   }, []);
 
   useEffect(() => {
+    const savedDocuments = localStorage.getItem("documents");
+    if (savedDocuments) {
+      const parsedDocuments = JSON.parse(savedDocuments);
+      if (Array.isArray(parsedDocuments)) {
+        setDocuments(parsedDocuments);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
     document.documentElement.style.setProperty("--ui-font-size", `${fontSize}px`);
     localStorage.setItem("uiFontSize", String(fontSize));
   }, [fontSize]);
+
+  useEffect(() => {
+    localStorage.setItem("documents", JSON.stringify(documents));
+  }, [documents]);
 
   const decreaseFontSize = () => {
     setFontSize((prev) => Math.max(minFontSize, prev - 1));
@@ -162,6 +202,75 @@ const Dashboard = () => {
 
   const increaseFontSize = () => {
     setFontSize((prev) => Math.min(maxFontSize, prev + 1));
+  };
+
+  const formatDocumentTime = (savedAt) => {
+    if (!savedAt) return "";
+
+    const date = new Date(savedAt);
+    if (Number.isNaN(date.getTime())) return "";
+
+    return date.toLocaleString("en-US", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+  };
+
+  const openAddDocumentEditor = () => {
+    setEditingDocumentId(null);
+    setDocumentInput("");
+    setIsDocumentEditorOpen(true);
+  };
+
+  const openEditDocumentEditor = (documentItem) => {
+    setEditingDocumentId(documentItem.id);
+    setDocumentInput(documentItem.content);
+    setIsDocumentEditorOpen(true);
+  };
+
+  const saveDocument = () => {
+    const trimmedText = documentInput.trim();
+    if (!trimmedText) return;
+    const now = Date.now();
+
+    if (editingDocumentId) {
+      const nextDocuments = documents.map((item) => {
+        if (item.id === editingDocumentId) {
+
+          return {
+            ...item,
+            content: trimmedText,
+            savedAt: now,
+          };
+        }
+        return item;
+      });
+
+      setDocuments(nextDocuments);
+    } else {
+      const newDocument = {
+        id: `doc-${Date.now()}`,
+        content: trimmedText,
+        savedAt: now,
+      };
+      setDocuments([newDocument, ...documents]);
+    }
+
+    setIsDocumentEditorOpen(false);
+    setEditingDocumentId(null);
+    setDocumentInput("");
+  };
+
+  const deleteDocument = (documentId) => {
+    const shouldDelete = window.confirm("Are you sure you want to delete this document?");
+    if (!shouldDelete) return;
+
+    const nextDocuments = documents.filter((item) => item.id !== documentId);
+    setDocuments(nextDocuments);
   };
 
   return (
@@ -172,6 +281,7 @@ const Dashboard = () => {
           onSelectConversation={handleSidebarConversationSelect}
           onOpenSearch={openSearch}
           onOpenBookmarks={openBookmarks}
+          onOpenDocuments={openDocuments}
         />
         {isSettingsOpen ? (
           <div className="chat_container settings_page">
@@ -303,6 +413,90 @@ const Dashboard = () => {
                   </button>
                 ))}
               </div>
+            </div>
+          </div>
+        ) : isDocumentsOpen ? (
+          <div className="chat_container settings_page">
+            <div className="settings_page_top">
+              <button
+                type="button"
+                className="settings_back_button"
+                onClick={closeDocuments}
+                aria-label="Back"
+                title="Back"
+              >
+                <img className="settings_back_icon" src={backButtonIcon} alt="" />
+              </button>
+              <h2 className="settings_title">Documents</h2>
+            </div>
+
+            <div className="settings_content documents_content">
+              {!isDocumentEditorOpen ? (
+                <>
+                  <button
+                    type="button"
+                    className="documents_add_button"
+                    onClick={openAddDocumentEditor}
+                    title="Add document"
+                  >
+                    <AiOutlinePlus />
+                    <span>Add Document</span>
+                  </button>
+
+                  <div className="search_results_list documents_list">
+                    {documents.map((item) => (
+                      <div key={item.id} className="document_result_card">
+                        <div className="document_result_text_view">
+                          <p className="bookmark_result_text">{item.content}</p>
+                        </div>
+
+                        <div className="document_result_footer">
+                          <p className="document_saved_time">
+                            {item.savedAt
+                              ? `${formatDocumentTime(item.savedAt)}`
+                              : " -"}
+                          </p>
+                          <div className="document_result_actions">
+                            <button
+                              type="button"
+                              className="document_action_button"
+                              onClick={() => openEditDocumentEditor(item)}
+                            >
+                              Edit
+                            </button>
+                            
+                            <button
+                              type="button"
+                              className="document_action_button delete_button"
+                              onClick={() => deleteDocument(item.id)}
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <div className="document_editor_container">
+                  <textarea
+                    className="new_message_input document_large_textarea"
+                    placeholder="Write your document..."
+                    value={documentInput}
+                    onChange={(e) => setDocumentInput(e.target.value)}
+                  />
+                  <div className="document_editor_bottom">
+                    <button
+                      type="button"
+                      className="document_save_button"
+                      onClick={saveDocument}
+                    >
+                      Save
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         ) : (

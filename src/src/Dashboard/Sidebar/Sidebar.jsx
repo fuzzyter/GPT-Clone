@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import NewChatButton from "./NewChatButton.jsx";
 import ListItem from "./ListItem";
 import BookmarksButton from "./BookmarksButton.jsx";
+import DocumentsButton from "./DocumentsButton.jsx";
 import DeleteConversationsButton from "./DeleteConversationsButton";
 import { useDispatch, useSelector } from "react-redux";
 import { setSelectedConversationId } from "../dashboardSlice";
@@ -9,7 +10,7 @@ import { useHelpAnchorRef } from "../Help/HelpAnchorsContext.jsx";
 import hambugerIcon from "../../../assets/hambuger.png";
 import searchIcon from "../../../assets/search.png";
 
-const Sidebar = ({ onSelectConversation, onOpenSearch, onOpenBookmarks }) => {
+const Sidebar = ({ onSelectConversation, onOpenSearch, onOpenBookmarks, onOpenDocuments }) => {
   const dispatch = useDispatch();
   const conversationsAnchorRef = useHelpAnchorRef("conversations");
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -71,6 +72,7 @@ const Sidebar = ({ onSelectConversation, onOpenSearch, onOpenBookmarks }) => {
             />
           ))}
         </div>
+        <DocumentsButton onOpenDocuments={onOpenDocuments} />
         <BookmarksButton onOpenBookmarks={onOpenBookmarks} />
         <DeleteConversationsButton />
 

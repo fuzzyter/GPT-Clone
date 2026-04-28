@@ -5,15 +5,30 @@ import { sendMessageToAI } from "../services/openaiService";
 // Async thunk to send message and get AI response
 export const sendConversationMessage = createAsyncThunk(
   'dashboard/sendMessage',
-  async ({ message, conversationId, conversationMessages }) => {
+  async ({ message, conversationId, conversationMessages, selectedDocuments }) => {
     // Build message history for OpenAI
     const messages = conversationMessages.map(m => ({
       role: m.aiMessage ? 'assistant' : 'user',
       content: m.content
     }));
     
-    // Add new user message
-    messages.push({ role: 'user', content: message.content });
+    // Add new user message + selected document context
+    let userPrompt = message.content;
+    if (Array.isArray(selectedDocuments) && selectedDocuments.length > 0) {
+      const docsText = selectedDocuments
+        .map((doc, index) => {
+          const savedTime = doc?.savedAt
+            ? new Date(doc.savedAt).toLocaleString("en-US")
+            : "Unknown";
+          const content = String(doc?.content || "");
+          return `Document ${index + 1} (Last saved: ${savedTime})\n${content}`;
+        })
+        .join("\n\n");
+
+      userPrompt = `${message.content}\n\nReferenced documents:\n${docsText}`;
+    }
+
+    messages.push({ role: 'user', content: userPrompt });
     
     // Get AI response
     const aiContent = await sendMessageToAI(messages);
