@@ -513,7 +513,7 @@
 }
 
 .chat_gpt_logo {
-    color: #7d7368;
+    color: #dbd4ce;
     font-weight: bold;
     font-size: 50px;
 }
@@ -541,6 +541,7 @@
     display: flex;
     align-items: center;
     cursor: pointer;
+    position: relative;
 }
 
 .list_item_selected {
@@ -554,6 +555,7 @@
 
 .new_chat_button_text, .list_item_text {
     margin-left: 10px;
+    margin-right: 40px;
     padding: 0;
     font-size: var(--ui-font-size);
     color: white;
@@ -565,6 +567,51 @@
 .new_chat_button_icon, .list_item_icon {
     margin-top: 4px;
     margin-left: 10px;
+}
+
+.list_item_edit_button {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: transparent;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.list_item:hover .list_item_edit_button {
+    display: flex;
+}
+
+.list_item_edit_icon {
+    width: 14px;
+    height: 14px;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+}
+
+.list_item_title_input {
+    margin-left: 10px;
+    margin-right: 40px;
+    width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.12);
+    color: white;
+    font-size: var(--ui-font-size);
+    font-family: inherit;
+    padding: 4px 8px;
+    outline: none;
+}
+
+.list_item_title_input::placeholder {
+    color: rgba(255, 255, 255, 0.8);
 }
 
 .new_message_input {

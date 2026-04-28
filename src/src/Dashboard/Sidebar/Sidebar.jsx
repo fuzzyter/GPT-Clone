@@ -5,7 +5,7 @@ import BookmarksButton from "./BookmarksButton.jsx";
 import DocumentsButton from "./DocumentsButton.jsx";
 import DeleteConversationsButton from "./DeleteConversationsButton";
 import { useDispatch, useSelector } from "react-redux";
-import { setSelectedConversationId } from "../dashboardSlice";
+import { renameConversationTitle, setSelectedConversationId } from "../dashboardSlice";
 import hambugerIcon from "../../../assets/hambuger.png";
 import searchIcon from "../../../assets/search.png";
 
@@ -24,6 +24,10 @@ const Sidebar = ({ onSelectConversation, onOpenSearch, onOpenBookmarks, onOpenDo
       onSelectConversation();
     }
     
+  };
+
+  const handleRenameConversation = (conversationId, title) => {
+    dispatch(renameConversationTitle({ conversationId, title }));
   };
 
   const toggleSidebar = () => {
@@ -63,9 +67,10 @@ const Sidebar = ({ onSelectConversation, onOpenSearch, onOpenBookmarks, onOpenDo
           {conversations.map((c) => (
             <ListItem
               key={c.id}
-              title={c.messages[0].content}
+              title={c.title || c.messages[0].content}
               conversationId={c.id}
               handleSetSelectedChat={handleSetSelectedChat}
+              onRenameConversation={handleRenameConversation}
               isSelected={selectedConversationId === c.id}
             />
           ))}

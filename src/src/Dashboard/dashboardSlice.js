@@ -95,6 +95,14 @@ const dashboardSlice = createSlice({
       message.bookmarked = !message.bookmarked;
       localStorage.setItem("conversations", JSON.stringify(state.conversations));
     },
+    renameConversationTitle: (state, action) => {
+      const { conversationId, title } = action.payload;
+      const conversation = state.conversations.find((c) => c.id === conversationId);
+      if (!conversation) return;
+
+      conversation.title = title;
+      localStorage.setItem("conversations", JSON.stringify(state.conversations));
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -141,6 +149,7 @@ export const {
   deleteConversations,
   loadConversations,
   toggleBookmark,
+  renameConversationTitle,
 } = dashboardSlice.actions;
 
 export default dashboardSlice.reducer;
