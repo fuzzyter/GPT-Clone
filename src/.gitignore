@@ -2,7 +2,6 @@ build/
 release/
 node_modules/
 
-# --- Secrets & local env (same rules as repo root; keeps src usable if copied alone) ---
 .env
 .env.*
 !.env.example
